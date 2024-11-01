@@ -50,10 +50,9 @@ h4 {
 
 .reject-button {
     background-color: red;
-    border: 1px solid #000000;
     color: #fff;
     padding: 10px 20px;
-    border: none;
+    border: 1px solid #000000;
     border-radius: 5px;
     cursor: pointer;
     font-size: 1rem;
@@ -67,10 +66,9 @@ h4 {
 
 .approve-button {
     background-color: green;
-    border: 1px solid #000000;
     color: #fff;
     padding: 10px 20px;
-    border: none;
+    border: 1px solid #000000;
     border-radius: 5px;
     cursor: pointer;
     font-size: 1rem;
@@ -88,5 +86,7 @@ h4 {
     padding: 15px; 
     margin: 10px 0; 
     background-color: #ffffff;
+    word-wrap: break-word; 
+    overflow-wrap: break-word;
 }
 
