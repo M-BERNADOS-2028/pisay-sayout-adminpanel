@@ -2,6 +2,7 @@
 <html lang="en">
 	<head>
 		<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
 		<title>Admin Panel</title>
 		
 		<link rel="preconnect" href="https://fonts.googleapis.com">
@@ -32,7 +33,7 @@
 			function loadPendingPosts() {
 				const postsContainer = document.getElementById("pendingPosts");
 				postsContainer.innerHTML = "";
-				const q = query(pendingPostsRef, orderBy("timestamp", "asc"));
+				const q = query(pendingPostsRef, orderBy("timestamp", "desc"));
 				onSnapshot(q, (snapshot) => {
 					postsContainer.innerHTML = ""; 
 					snapshot.forEach((doc) => {
@@ -94,7 +95,7 @@
 				</nav>
 		    </div>
 		</header>
-		<h1>Admin Panel Posts</h1>
+		<h1 class="page-title">Admin Panel Posts</h1>
 		<div id="pendingPosts">
 		</div>
 	</body>
