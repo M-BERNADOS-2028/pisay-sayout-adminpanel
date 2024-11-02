@@ -44,6 +44,7 @@
 						postElement.className = 'post'; 
 						
 						postElement.innerHTML = `
+							<p><em>Posted by Anonymous</em></p>
 							<small>Posted on: ${new Date(postData.timestamp.toMillis()).toLocaleString()}</small>
 							<p><strong>${postData.text}</strong></p>
 							<button onclick="window.approvePost('${postId}', '${postData.text}')" class="approve-button">Approve</button>
