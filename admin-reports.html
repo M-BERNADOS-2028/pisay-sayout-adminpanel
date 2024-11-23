@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Admin Panel - Bug Reports</title>
+	
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+	<script type="module">
+		import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+		import { getFirestore, collection, query, orderBy, onSnapshot, doc, deleteDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-firestore.js";
+
+		const firebaseConfig = {
+			apiKey: "AIzaSyDemeKsWgQhIxa7fvWm3rf9F5AcOELBdaY",
+			authDomain: "pisay-sayout.firebaseapp.com",
+			projectId: "pisay-sayout",
+			storageBucket: "pisay-sayout.appspot.com",
+			messagingSenderId: "682766827567",
+			appId: "1:682766827567:web:f7a51de6fe4865f3a706da",
+			measurementId: "G-TVRP1413RD"
+		};
+
+		const app = initializeApp(firebaseConfig);
+		const db = getFirestore(app);
+		const bugReportsRef = collection(db, "BugReports");
+
+		function loadBugReports() {
+			const reportsContainer = document.getElementById("bugReports");
+			reportsContainer.innerHTML = "";
+			const q = query(bugReportsRef, orderBy("timestamp", "desc"));
+			onSnapshot(q, (snapshot) => {
+				reportsContainer.innerHTML = "";
+				snapshot.forEach((doc) => {
+					const reportData = doc.data();
+					const reportId = doc.id;
+					const reportElement = document.createElement("div");
+					reportElement.className = 'report';
+					reportElement.innerHTML = `
+						<p><strong>Description:</strong> ${reportData.description}</p>
+						<p><strong>Steps to Reproduce:</strong> ${reportData.stepsToReproduce || "Not provided"}</p>
+						${reportData.screenshotUrl ? `<p><strong>Screenshot:</strong> <a href="${reportData.screenshotUrl}" target="_blank">View Screenshot</a></p>` : ""}
+						<small>Submitted on: ${new Date(reportData.timestamp.toMillis()).toLocaleString()}</small>
+						<div class="action-buttons">
+							<button onclick="window.resolveReport('${reportId}')" class="resolve-button">Resolve</button>
+							<button onclick="window.deleteReport('${reportId}')" class="delete-button">Delete</button>
+						</div>
+					`;
+					reportsContainer.appendChild(reportElement);
+				});
+			});
+		}
+
+		window.resolveReport = async function(reportId) {
+			try {
+				await setDoc(doc(bugReportsRef, reportId), { status: "resolved" }, { merge: true });
+				alert("Report marked as resolved.");
+			} catch (error) {
+				console.error("Error resolving report:", error);
+			}
+		};
+
+		window.deleteReport = async function(reportId) {
+			try {
+				await deleteDoc(doc(bugReportsRef, reportId));
+				alert("Report deleted successfully.");
+			} catch (error) {
+				console.error("Error deleting report:", error);
+			}
+		};
+
+		window.onload = loadBugReports;
+	</script>
+
+	<link rel="stylesheet" href="admin-reports.css">
+</head>
+<body>
+	<header>
+		<div class="title-part">
+			<h1>PISAY SAYOUT</h1>
+			<h2>Admin Panel</h2>
+			<h4>v1.4</h4>
+
+			<nav>
+				<a href="admin.html">Sayout Posts</a>
+				<a href="admin-reports.html" style="font-weight: bold; color: #FFFC33; text-decoration: underline; font-size: 1.1rem;">Reported Issues</a>
+			</nav>
+		</div>
+	</header>
+
+	<h1 class="page-title">Bug Reports</h1>
+	<div id="bugReports"></div>
+
+	<div class="footer">
+		<p>© Copyright @PISAY-SAYOUT</p>
+	</div>
+</body>
+</html>
